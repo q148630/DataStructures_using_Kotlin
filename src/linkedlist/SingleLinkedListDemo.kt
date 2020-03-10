@@ -1,7 +1,6 @@
 package linkedlist
 
 import java.util.*
-import kotlin.math.sin
 
 fun main() {
     // 測試
