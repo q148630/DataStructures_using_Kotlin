@@ -1,6 +1,6 @@
 package sparsearray
 
-fun main(args: Array<String>) {
+fun main() {
     // 創建一個原始的二維陣列 11 * 11
     // 0: 表示沒有棋子, 1: 表示黑子, 2: 表示藍子
     val chessArr1 = Array(11) { IntArray(11) { 0 } }
@@ -61,7 +61,7 @@ fun main(args: Array<String>) {
         2. 在讀取稀疏陣列後幾列的數據,並賦給原始的二維陣列即可.
     */
     // 1. 先讀取稀疏陣列的第一列,根據第一列的數據,創建原始的二維陣列
-    val chessArr2 = Array(sparseArr[0][0]) {Array(sparseArr[0][1]) {0} }
+    val chessArr2 = Array(sparseArr[0][0]) { Array(sparseArr[0][1]) { 0 } }
 
     // 2. 在讀取稀疏陣列後幾列的數據(從第二列開始),並賦給原始的二維陣列即可
     for (rowIndex in 1..sparseArr.lastIndex) {
