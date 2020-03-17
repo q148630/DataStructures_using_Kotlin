@@ -13,9 +13,10 @@ fun main() {
     var num2 = 0
     var oper = 0
     var res = 0
+    var keepNum = "" // 用於拼接多位數
 
     // 開始 for 循環，掃描 expression
-    for (ch in expression/*依次得到 expression 的每一個字符*/) {
+    for ((i, ch) in expression.withIndex()/*依次得到 expression 的每一個字符*/) {
         // 判斷 ch 是什麼，然後做相應的處理
         if (operStack.isOper(ch)) { // 如果是運算符
             // 判斷當前的運算符堆疊是否為空
@@ -39,8 +40,21 @@ fun main() {
                 operStack.push(ch.toInt())
             }
         } else {
-            // 如果是數值，則直接 push 入數值堆疊
-            numStack.push(ch.toInt() - 48) // ch.toInt() - 48 (0 的 ASCII 碼)
+            // 如果是數值，則直接 push 入數值堆疊 (處理單位數的思路)
+            // numStack.push(ch.toInt() - 48) // ch.toInt() - 48 (0 的 ASCII 碼)
+
+            // 處理多位數的思路
+            // 1. 當處理多位數時，不能發現是一個數就立即入堆疊，因為有可能是多位數
+            // 2. 在處理時，需要向 expression 表達式的 index 後再看一位，如果是數值就繼續掃描，如果是 operator 才入堆疊
+            // 3. 因此我們需要定義一個字串變數，用於拼接
+            keepNum += ch // 處理多位數
+
+            // 1. 如果已經掃描到 expression 的最後一位數，就直接入數值堆疊 (避免 StringIndexOutOfBoundsException)
+            // 2. 判斷下一個字符是不是數字，如果是數字就繼續掃描，如果是 operator 則入堆疊
+            if (i == expression.lastIndex || operStack.isOper(expression[i + 1])) {
+                numStack.push(keepNum.toInt()) // 如果後一位是 operator，則入數值堆疊
+                keepNum = "" // 將 keepNum 清空，很重要!
+            }
         }
     }
 
