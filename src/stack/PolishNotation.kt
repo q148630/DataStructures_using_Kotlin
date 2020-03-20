@@ -1,6 +1,5 @@
 package stack
 
-import java.beans.Expression
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -12,7 +11,6 @@ fun main() {
     // 即 "1+((2+3)x4)-5" => ArrayList [1, +, (, (, 2, +, 3, ), x, 4, ), -, 5]
     // 3. 將得到的中序表達式對應的 List => 轉換成後序表達式的 List
     // 即 ArrayList [1, +, (, (, 2, +, 3, ), x, 4, ), -, 5] => ArrayList [1, 2, 3, +, 4, x, +, 5, -]
-
     val expression = "1+((2+3)x4)-5"
     val infixExpressionList = toInfixExpressionList(expression)
     println("後序表達式對應的 List=$infixExpressionList") // ArrayList [1, +, (, (, 2, +, 3, ), x, 4, ), -, 5]
@@ -97,7 +95,7 @@ fun toInfixExpressionList(s: String): List<String> {
 
             // 1. 如果已經掃描到 expression 的最後一位數，就直接入堆疊 (避免 StringIndexOutOfBoundsException)
             // 2. 判斷下一個字符是不是數字，如果是數字就繼續掃描，如果是 operator 則入堆疊
-            if (i == s.lastIndex || (s[i+1].toInt() !in 48..57)) {
+            if (i == s.lastIndex || (s[i + 1].toInt() !in 48..57)) {
                 ls.add(str)
                 str = "" // 將 str 清空，很重要!
             }
@@ -160,7 +158,7 @@ class Operator {
         private const val DIV = 2
 
         // 定義一個方法，返回對應的優先級數字
-        fun getValue(operator: String) = when(operator) {
+        fun getValue(operator: String) = when (operator) {
             "+" -> ADD
             "-" -> SUB
             "x" -> MUL
@@ -168,7 +166,7 @@ class Operator {
             else -> {
                 println("不存在該運算符: \"$operator\"")
                 0 // 要比上面的 ADD、SUB、MUL、DIV 都還要小，
-                  // 因為 "(" 也會在 s1 堆疊裡，如果比較時優先級比他們高，會被 pop 出來並加入到 s2 裡面，會產生 Bug
+                // 因為 "(" 也會在 s1 堆疊裡，如果比較時優先級比他們高，會被 pop 出來並加入到 s2 裡面，會產生 Bug
             }
         }
     }
