@@ -1,16 +1,18 @@
 package hashtable
-// TODO: update and delete an Emp in HashTable.
+
 fun main() {
     // 創建 HashTable
     val hashTable = HashTable(7)
 
     // 定義一個簡單的菜單
-    var key = ""
+    var key: String
     var loop = true
     while (loop) {
         println("add: 添加員工")
         println("list: 顯示員工")
         println("find: 查找員工")
+        println("update: 修改員工")
+        println("delete: 刪除員工")
         println("exit: 退出程式")
         key = readLine()!!
         when (key) {
@@ -31,6 +33,21 @@ fun main() {
                 println("請輸入要查找的 id")
                 val id = readLine()!!.toInt()
                 hashTable.findEmpById(id)
+            }
+            "update" -> {
+                println("請輸入要修改的 id")
+                val id = readLine()!!.toInt()
+                println("請輸入修改後的名字")
+                val name = readLine()!!
+
+                // 修改員工
+                val emp = Emp(id, name)
+                hashTable.updateEmp(emp)
+            }
+            "delete" -> {
+                println("請輸入要刪除的 id")
+                val id = readLine()!!.toInt()
+                hashTable.deleteEmp(id)
             }
             "exit" -> {
                 loop = false
@@ -64,6 +81,28 @@ class HashTable(private val size: Int) {
         val emp = empLinkedListArray[empLinkedListNo].findEmpById(id)
         if (emp != null) { // 找到
             println("在第${empLinkedListNo + 1}條鏈表中找到 員工 id = $id")
+        } else {
+            println("在 HashTable 中，沒有找到該員工~")
+        }
+    }
+
+    // 根據輸入的 emp，修改員工
+    fun updateEmp(emp: Emp) {
+        val empLinkedListNo = hashFun(emp.id) // 使用 Hash Function 來確定到哪一條鏈表中修改
+        val isUpdate = empLinkedListArray[empLinkedListNo].updateEmp(emp)
+        if (isUpdate) { // 已更新
+            println("在第${empLinkedListNo + 1}條鏈表中更新 員工 id = ${emp.id}")
+        } else {
+            println("在 HashTable 中，沒有找到該員工~")
+        }
+    }
+
+    // 根據輸入的 id，刪除員工
+    fun deleteEmp(id: Int) {
+        val empLinkedListNo = hashFun(id) // 使用 Hash Function 來確定到哪一條鏈表中刪除
+        val isDelete = empLinkedListArray[empLinkedListNo].deleteEmp(id)
+        if (isDelete) { // 已刪除
+            println("在第${empLinkedListNo + 1}條鏈表中刪除 員工 id = $id")
         } else {
             println("在 HashTable 中，沒有找到該員工~")
         }
@@ -130,5 +169,47 @@ class EmpLinkedList {
         }
         // 如果找到最後一個都不符合，則 curEmp 會是 null
         return curEmp
+    }
+
+    // 根據 emp.id 修改員工訊息
+    fun updateEmp(emp: Emp): Boolean {
+        if (head == null) {
+            println("鏈表為空")
+            return false
+        }
+        var curEmp = head // 輔助變數
+        var flag = false
+        while (curEmp != null/*判斷當前節點是否為 null*/) {
+            if (curEmp.id == emp.id) { // 找到
+                flag = true
+                curEmp.name = emp.name // 這時 curEmp 就指向要更新的員工
+                break
+            }
+            curEmp = curEmp.next // 後移
+        }
+        return flag
+    }
+
+    // 根據 id 刪除員工訊息
+    fun deleteEmp(id: Int): Boolean {
+        if (head == null) {
+            println("鏈表為空")
+            return false
+        }
+        if (head!!.id == id) { // 要刪除的節點是頭節點時，直接將頭節點後移
+            head = head!!.next
+            return true
+        }
+        var curEmp = head // 輔助變數
+        var flag = false
+        while (curEmp!!.next != null) {
+            if (curEmp.next!!.id == id) { //找到欲刪除節點的前一個節點
+                flag = true
+                curEmp.next = curEmp.next!!.next // 這時 curEmp 就指向要刪除節點的前一個節點
+                break
+            }
+            curEmp = curEmp.next // 後移
+        }
+        return flag
     }
 }
