@@ -32,6 +32,12 @@ fun main() {
 }
 
 // 定義 ThreadedBinaryTree 引線二元樹
+/**
+ * 引線二元樹
+ * 由於 n 個元素的一般二元樹建立好之後，會有 n + 1 個節點沒有指向子節點
+ * 利用中序引線化來建立引線二元樹，讓原本為 null 的 pointer 指向 前驅 或 後繼節點
+ * 以便讓我們能不用遞迴的來遍歷二元樹
+ */
 class ThreadedBinaryTree(private var _root: HeroNode? = null) {
     val root: HeroNode?
         get() = _root
@@ -192,7 +198,7 @@ class ThreadedBinaryTree(private var _root: HeroNode? = null) {
         pre = node
 
         // (二)引線化左子樹
-        if (node.leftType != 1) { // 這邊需要判斷是因為當前繼節點接上時，會與之前的節點形成無窮遞迴
+        if (node.leftType != 1) { // 這邊需要判斷是因為當前驅節點接上時，會與之前的節點形成無窮遞迴
             preOrderThreadedNodes(node.left)
         }
 
